@@ -1,3 +1,4 @@
+import 'package:avaliacao_2/pages/home_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -16,11 +17,7 @@ class DeliveryHubApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
         useMaterial3: true,
       ),
-      home: const Scaffold(
-        body: Center(
-          child: Text('Delivery Hub - Avaliação 2'),
-        ),
-      ),
+      home: const HomePage(),
     );
   }
 }
