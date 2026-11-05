@@ -1,8 +1,7 @@
-import 'dart:nativewrappers/_internal/vm/lib/developer.dart';
-
 import 'package:avaliacao_2/api/api_config.dart';
 import 'package:avaliacao_2/models/cliente_model.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/widgets.dart';
 
 class ClienteService {
   final _dio = Dio();
@@ -14,9 +13,9 @@ class ClienteService {
       final list = response.data as List;
 
       return list.map((item) => ClienteModel.fromMap(item)).toList();
-    } on DioException catch (e, s) {
-      log('Erro na requisicao: ${e.message}', stackTrace: s);
-      rethrow;
+    } on DioException catch (e) {
+      debugPrint('Erro na requisicao: ${e.message}');
+      return [];
     }
   }
 }

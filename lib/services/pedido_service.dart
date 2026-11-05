@@ -1,4 +1,4 @@
-import 'dart:nativewrappers/_internal/vm/lib/developer.dart';
+import 'dart:developer';
 
 import 'package:avaliacao_2/api/api_config.dart';
 import 'package:avaliacao_2/models/pedido_model.dart';
@@ -52,8 +52,8 @@ class PedidoService {
       );
 
       return response.data;
-    } on DioException catch (e, s) {
-      log('Erro ao criar pedido: ${e.message}', stackTrace: s);
+    } on DioException catch (e) {
+      //log('Erro ao criar pedido: ${e.message}', stackTrace: s);
       rethrow;
     }
   }
@@ -80,8 +80,8 @@ class PedidoService {
       );
 
       return response.data;
-    } on DioException catch (e, s) {
-      log('Erro ao editar pedido: ${e.message}', stackTrace: s);
+    } on DioException catch (e) {
+      //log('Erro ao editar pedido: ${e.message}', stackTrace: s);
       rethrow;
     }
   }
@@ -90,8 +90,8 @@ class PedidoService {
   Future<void> deletePedido(int id) async {
     try {
       await _dio.delete('${ApiConfig.baseUrl}/pedidos/$id');
-    } on DioException catch (e, s) {
-      log('Erro ao excluir pedido: ${e.message}', stackTrace: s);
+    } on DioException catch (e) {
+      //log('Erro ao excluir pedido: ${e.message}', stackTrace: s);
       rethrow;
     }
   }

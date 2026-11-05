@@ -1,3 +1,7 @@
+import 'package:avaliacao_2/models/cliente_model.dart';
+import 'package:avaliacao_2/models/pedido_model.dart';
+import 'package:avaliacao_2/services/cliente_service.dart';
+import 'package:avaliacao_2/services/pedido_service.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -8,50 +12,64 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int? _value = 1;
+  final _service = PedidoService();
+  Future<List<PedidoModel>>? _futurePedidos;
+  List<PedidoModel> pedidos = [];
+  //var String statusFiltrados =
+
+  @override
+  void initState() {
+    super.initState();
+    _futurePedidos = _service.getPedidos(<String>[]);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blueAccent,
-        title: const Text(
-          'Delivery Hub',
-          style: TextStyle(
-            letterSpacing: 2,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        elevation: 0,
-        centerTitle: true,
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Filtros:',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-          ),
-          SizedBox(height: 8),
-          SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Wrap(
-              spacing: 5,
-              children: List<Widget>.generate(5, (int index) {
-                return ChoiceChip(
-                  label: Text('Item ${index + 1}'),
-                  selected: _value == index,
-                  onSelected: (bool selected) {
-                    setState(() {
-                      _value = selected ? index : null;
-                    });
-                  },
-                );
-              }).toList(),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.blueAccent,
+          title: const Text(
+            'Delivery Hub',
+            style: TextStyle(
+              letterSpacing: 2,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
             ),
           ),
-        ],
+          elevation: 0,
+          centerTitle: true,
+        ),
+        body: FutureBuilder(
+          future: _futurePedidos,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (snapshot.hasError) {
+              return const Text('Erro ao carregar pedidos.');
+            }
+
+            final pedidos = snapshot.data ?? [];
+
+            if (pedidos.isEmpty) {
+              return const Center(child: Text('Nenhum pedido encontrado.'));
+            }
+
+            return ListView.separated(
+              padding: const EdgeInsets.only(bottom: 80.0),
+              separatorBuilder: (_, _) => const Divider(),
+              itemCount: pedidos.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(pedidos[index].descricao),
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }
